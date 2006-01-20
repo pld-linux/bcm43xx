@@ -21,9 +21,10 @@ License:	GPL v2
 Group:		Base/Kernel
 Source0:	http://ftp.berlios.de/pub/bcm43xx/snapshots/bcm43xx/%{name}-%{_snap}.tar.bz2
 # Source0-md5:	4294c8a1f8c9c0f3ea71c8262d016cad
+Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.15}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
 BuildRequires:	rpmbuild(macros) >= 1.217
 BuildRequires:	softmac-devel
 %endif
@@ -78,6 +79,7 @@ BCM43xx.
 
 %prep
 %setup -q -n %{name}-%{_snap}
+%patch0 -p1
 cp -rf %{_usr}/src/softmac-include/net .
 
 %build
