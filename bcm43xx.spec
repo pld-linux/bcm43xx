@@ -21,6 +21,8 @@ License:	GPL v2
 Group:		Base/Kernel
 Source0:	http://ftp.berlios.de/pub/bcm43xx/snapshots/bcm43xx/%{name}-%{_snap}.tar.bz2
 # Source0-md5:	4294c8a1f8c9c0f3ea71c8262d016cad
+Source1:	http://ftp.berlios.de/pub/bcm43xx/snapshots/fwcutter/%{name}-fwcutter-%{_snap}.tar.bz2
+# Source1-md5:	bcf4c2cb4a53c3d2b9b2f3a737fd80fc
 Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
@@ -78,11 +80,18 @@ Pakiet zawiera sterownik dla Linuksa SMP do kart sieciowych Broadcom
 BCM43xx.
 
 %prep
-%setup -q -n %{name}-%{_snap}
+%setup -q -n %{name}-%{_snap} -a1
 %patch0 -p1
 cp -rf %{_usr}/src/softmac-include/net .
+mv %{name}-fwcutter-%{_snap}/README README.fwcutter
 
 %build
+
+%if %{with userspace}
+%{__make} -C %{name}-fwcutter-%{_snap} \
+	CFLAGS="%{rpmcflags} -std=c99 -Wall -pedantic -D_BSD_SOURCE"	\
+	CC="%{__cc}"
+%endif
 
 %if %{with kernel}
 for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
@@ -121,6 +130,11 @@ done
 %install
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with userspace}
+install -d $RPM_BUILD_ROOT%{_bindir}
+install %{name}-fwcutter-%{_snap}/fwcutter $RPM_BUILD_ROOT%{_bindir}
+%endif
+
 %if %{with kernel}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/kernel/drivers/net
 install bcm43xx-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
@@ -149,7 +163,8 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with userspace}
 %files
 %defattr(644,root,root,755)
-%doc README
+%doc README README.fwcutter
+%{_bindir}/fwcutter
 %endif
 
 %if %{with kernel}
