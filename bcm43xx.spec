@@ -101,7 +101,8 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
 %endif
 
-	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
+	cp %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
+	cat %{_usr}/src/softmac-include/symvers.add >> Module.symvers
 	touch include/config/MARKER
 
 	%{__make} -C %{_kernelsrcdir} clean \
