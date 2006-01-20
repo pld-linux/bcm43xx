@@ -1,0 +1,29 @@
+--- bcm43xx-20060120/bcm43xx.h~	2006-01-20 06:00:12.000000000 +0100
++++ bcm43xx-20060120/bcm43xx.h	2006-01-20 17:52:51.000000000 +0100
+@@ -7,8 +7,8 @@
+ #include <linux/interrupt.h>
+ #include <linux/stringify.h>
+ #include <linux/pci.h>
+-#include <net/ieee80211.h>
+-#include <net/ieee80211softmac.h>
++#include "net/ieee80211.h"
++#include "net/ieee80211softmac.h"
+ #include <asm/atomic.h>
+ #include <asm/io.h>
+ 
+@@ -941,15 +941,6 @@
+  * Compatibility stuff follows
+  */
+ 
+-#if LINUX_VERSION_CODE < KERNEL_VERSION(2, 6, 15)
+-# error "The bcm43xx driver does not support kernels < 2.6.15"
+-# error "The driver will _NOT_ compile on your kernel. Please upgrade to the latest 2.6 kernel."
+-# error "DO NOT COMPLAIN ABOUT BUGS. UPDATE FIRST AND TRY AGAIN."
+-#else
+-# if !defined(CONFIG_IEEE80211_MODULE) && !defined(CONFIG_IEEE80211)
+-#  error "Generic IEEE 802.11 Networking Stack (CONFIG_IEEE80211) not available."
+-# endif
+-#endif
+ #ifdef IEEE80211SOFTMAC_API
+ # if IEEE80211SOFTMAC_API != 0
+ #  warning "Incompatible SoftMAC subsystem installed."
