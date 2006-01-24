@@ -14,15 +14,15 @@ Summary:	Broadcom BCM43xx series driver for Linux
 Summary(pl):	Sterownik do kart Broadcom BCM43xx
 Name:		bcm43xx
 Version:	0.0.1
-%define	_snap	20060120
-%define		_rel	0.1
-Release:	%{_rel}
+%define	_snap	20060124
+%define	_rel	0.1
+Release:	0.%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Base/Kernel
 Source0:	http://ftp.berlios.de/pub/bcm43xx/snapshots/bcm43xx/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	4294c8a1f8c9c0f3ea71c8262d016cad
+# Source0-md5:	35440bb5b3ebcb08dc45aefd6b0ac18b
 Source1:	http://ftp.berlios.de/pub/bcm43xx/snapshots/fwcutter/%{name}-fwcutter-%{_snap}.tar.bz2
-# Source1-md5:	bcf4c2cb4a53c3d2b9b2f3a737fd80fc
+# Source1-md5:	31590bf53caaa8e2407eb01a42129af5
 Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
@@ -80,9 +80,9 @@ Pakiet zawiera sterownik dla Linuksa SMP do kart sieciowych Broadcom
 BCM43xx.
 
 %prep
-%setup -q -n %{name}-%{_snap} -a1
+%setup -q -n %{name}-%{_snap} -a1 -a2
 %patch0 -p1
-cp -rf %{_usr}/src/softmac-include/net .
+ln -s %{_includedir}/linux/softmac/net .
 mv %{name}-fwcutter-%{_snap}/README README.fwcutter
 
 %build
@@ -109,9 +109,7 @@ for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}
 %else
 	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
 %endif
-
-	cp %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
-	cat %{_usr}/src/softmac-include/symvers.add >> Module.symvers
+	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
 	touch include/config/MARKER
 
 	%{__make} -C %{_kernelsrcdir} clean \
