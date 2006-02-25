@@ -10,19 +10,20 @@
 %undefine	with_smp
 %endif
 #
+%define	_snap	060225
+%define	_fwcutter_ver	003
+%define	_rel	0.1
+Release:	0.20%{_snap}.%{_rel}
 Summary:	Broadcom BCM43xx series driver for Linux
 Summary(pl):	Sterownik do kart Broadcom BCM43xx
 Name:		bcm43xx
 Version:	0.0.1
-%define	_snap	20060124
-%define	_rel	0.1
-Release:	0.%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Base/Kernel
-Source0:	http://ftp.berlios.de/pub/bcm43xx/snapshots/bcm43xx/%{name}-%{_snap}.tar.bz2
-# Source0-md5:	35440bb5b3ebcb08dc45aefd6b0ac18b
-Source1:	http://ftp.berlios.de/pub/bcm43xx/snapshots/fwcutter/%{name}-fwcutter-%{_snap}.tar.bz2
-# Source1-md5:	31590bf53caaa8e2407eb01a42129af5
+Source0:	ftp://bu3sch.de/bcm43xx-snapshots/standalone/bcm43xx/bcm43xx-standalone-%{_snap}.tar.bz2
+# Source0-md5:	4df269a1da522918bc20196dce04d36d
+Source1:	http://download.berlios.de/bcm43xx/bcm43xx-fwcutter-%{_fwcutter_ver}.tar.bz2
+# Source1-md5:	89b407d920811cfd15507da17f901bb0
 Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
@@ -80,49 +81,62 @@ Pakiet zawiera sterownik dla Linuksa SMP do kart sieciowych Broadcom
 BCM43xx.
 
 %prep
-%setup -q -n %{name}-%{_snap} -a1 -a2
+%setup -q -n %{name}-standalone-%{_snap} -a1
 %patch0 -p1
-ln -s %{_includedir}/linux/softmac/net .
-mv %{name}-fwcutter-%{_snap}/README README.fwcutter
+sed -i 's/KBUILD_MODNAME/"bcm43xx"/' \
+	drivers/net/wireless/bcm43xx/*.[hc]
+ln -s %{_includedir}/linux/softmac/net drivers/net/wireless/bcm43xx/
+mv %{name}-fwcutter-%{_fwcutter_ver}/README README.fwcutter
+cat > drivers/net/wireless/bcm43xx/Makefile << EOF
+CFLAGS += -DCONFIG_BCM43XX=1
+CFLAGS += -DCONFIG_BCM43XX_DMA=1
+CFLAGS += -DCONFIG_BCM43XX_PIO=1
+%{?debug:CFLAGS += -DCONFIG_BCM43XX_DEBUG=1}
+
+obj-m += bcm43xx.o
+
+bcm43xx-objs := bcm43xx_main.o bcm43xx_ilt.o \
+	bcm43xx_radio.o bcm43xx_phy.o \
+	bcm43xx_power.o bcm43xx_wx.o \
+	bcm43xx_leds.o bcm43xx_ethtool.o \
+	%{?debug:bcm43xx_debugfs.o} \
+	bcm43xx_dma.o bcm43xx_pio.o
+EOF
 
 %build
 
 %if %{with userspace}
-%{__make} -C %{name}-fwcutter-%{_snap} \
+%{__make} -C %{name}-fwcutter-%{_fwcutter_ver} \
 	CFLAGS="%{rpmcflags} -std=c99 -Wall -pedantic -D_BSD_SOURCE"	\
 	CC="%{__cc}"
 %endif
 
 %if %{with kernel}
+cd drivers/net/wireless/bcm43xx/
 for cfg in %{?with_dist_kernel:%{?with_smp:smp} up}%{!?with_dist_kernel:nondist}; do
 	if [ ! -r "%{_kernelsrcdir}/config-$cfg" ]; then
 		exit 1
 	fi
-	rm -rf include
-	install -d include/{linux,config}
-	ln -sf %{_kernelsrcdir}/config-$cfg .config
-	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h include/linux/autoconf.h
-%ifarch ppc ppc64
-	install -d include/asm
-	[ ! -d %{_kernelsrcdir}/include/asm-powerpc ] || ln -sf %{_kernelsrcdir}/include/asm-powerpc/* include/asm
-	[ ! -d %{_kernelsrcdir}/include/asm-%{_target_base_arch} ] || ln -snf %{_kernelsrcdir}/include/asm-%{_target_base_arch}/* include/asm
-%else
-	ln -sf %{_kernelsrcdir}/include/asm-%{_target_base_arch} include/asm
-%endif
-	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg Module.symvers
-	touch include/config/MARKER
+	install -d o/include/linux
+	ln -sf %{_kernelsrcdir}/config-$cfg o/.config
+	ln -sf %{_kernelsrcdir}/Module.symvers-$cfg o/Module.symvers
+	ln -sf %{_kernelsrcdir}/include/linux/autoconf-$cfg.h o/include/linux/autoconf.h
 
-	%{__make} -C %{_kernelsrcdir} clean \
-		RCS_FIND_IGNORE="-name '*.ko' -o" \
-		M=$PWD O=$PWD \
-		%{?with_verbose:V=1}
+	%if %{with dist_kernel}
+		%{__make} -C %{_kernelsrcdir} O=$PWD/o prepare scripts
+	%else
+		install -d o/include/config
+		touch o/include/config/MARKER
+		ln -sf %{_kernelsrcdir}/scripts o/scripts
+	%endif
 	%{__make} -C %{_kernelsrcdir} modules \
 		CC="%{__cc}" CPP="%{__cpp}" \
-		M=$PWD O=$PWD \
+		M=$PWD O=$PWD/o \
 		%{?with_verbose:V=1}
 
 	mv bcm43xx{,-$cfg}.ko
 done
+cd -
 %endif
 
 %install
@@ -130,15 +144,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %if %{with userspace}
 install -d $RPM_BUILD_ROOT%{_bindir}
-install %{name}-fwcutter-%{_snap}/fwcutter $RPM_BUILD_ROOT%{_bindir}
+install %{name}-fwcutter-%{_fwcutter_ver}/bcm43xx-fwcutter $RPM_BUILD_ROOT%{_bindir}
 %endif
 
 %if %{with kernel}
 install -d $RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}{,smp}/kernel/drivers/net
-install bcm43xx-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
+install drivers/net/wireless/bcm43xx/bcm43xx-%{?with_dist_kernel:up}%{!?with_dist_kernel:nondist}.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}/kernel/drivers/net/bcm43xx.ko
 %if %{with smp} && %{with dist_kernel}
-install bcm43xx-smp.ko \
+install drivers/net/wireless/bcm43xx/bcm43xx-smp.ko \
 	$RPM_BUILD_ROOT/lib/modules/%{_kernel_ver}smp/kernel/drivers/net/bcm43xx.ko
 %endif
 %endif
@@ -162,7 +176,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc README README.fwcutter
-%attr(755,root,root) %{_bindir}/fwcutter
+%attr(755,root,root) %{_bindir}/bcm43xx-fwcutter
 %endif
 
 %if %{with kernel}
