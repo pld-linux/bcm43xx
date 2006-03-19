@@ -10,7 +10,7 @@
 %undefine	with_smp
 %endif
 #
-%define	_snap	060225
+%define	_snap	060319
 %define	_fwcutter_ver	003
 %define	_rel	0.1
 Release:	0.20%{_snap}.%{_rel}
@@ -20,8 +20,8 @@ Name:		bcm43xx
 Version:	0.0.1
 License:	GPL v2
 Group:		Base/Kernel
-Source0:	ftp://bu3sch.de/bcm43xx-snapshots/standalone/bcm43xx/bcm43xx-standalone-%{_snap}.tar.bz2
-# Source0-md5:	4df269a1da522918bc20196dce04d36d
+Source0:	http://tara.shadowpimps.net/~bcm43xx/bcm43xx-snapshots/standalone/bcm43xx/bcm43xx-standalone-%{_snap}.tar.bz2
+# Source0-md5:	fbc0215969a18ccf09f8dc07faf5dd6d
 Source1:	http://download.berlios.de/bcm43xx/bcm43xx-fwcutter-%{_fwcutter_ver}.tar.bz2
 # Source1-md5:	89b407d920811cfd15507da17f901bb0
 Patch0:		%{name}-local_headers.patch
