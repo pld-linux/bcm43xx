@@ -13,21 +13,21 @@
 %define	_snap	060319
 %define	_fwcutter_ver	003
 %define	_rel	0.1
-Release:	0.20%{_snap}.%{_rel}
 Summary:	Broadcom BCM43xx series driver for Linux
 Summary(pl):	Sterownik do kart Broadcom BCM43xx
 Name:		bcm43xx
 Version:	0.0.1
+Release:	0.20%{_snap}.%{_rel}
 License:	GPL v2
 Group:		Base/Kernel
-Source0:	http://tara.shadowpimps.net/~bcm43xx/bcm43xx-snapshots/standalone/bcm43xx/bcm43xx-standalone-%{_snap}.tar.bz2
+Source0:	http://tara.shadowpimps.net/~bcm43xx/bcm43xx-snapshots/standalone/bcm43xx/%{name}-standalone-%{_snap}.tar.bz2
 # Source0-md5:	fbc0215969a18ccf09f8dc07faf5dd6d
-Source1:	http://download.berlios.de/bcm43xx/bcm43xx-fwcutter-%{_fwcutter_ver}.tar.bz2
+Source1:	http://download.berlios.de/bcm43xx/%{name}-fwcutter-%{_fwcutter_ver}.tar.bz2
 # Source1-md5:	89b407d920811cfd15507da17f901bb0
 Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 2.6.7}
+%{?with_dist_kernel:BuildRequires:	kernel-module-build >= 3:2.6.7}
 BuildRequires:	rpmbuild(macros) >= 1.217
 BuildRequires:	softmac-devel
 %endif
