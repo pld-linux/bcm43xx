@@ -11,8 +11,8 @@
 %endif
 #
 %define	_snap	060416
-%define	_fwcutter_ver	004
-%define	_rel	0.1
+%define	_fwcutter_ver	005
+%define	_rel	2
 Summary:	Broadcom BCM43xx series driver for Linux
 Summary(pl):	Sterownik do kart Broadcom BCM43xx
 Name:		bcm43xx
@@ -23,7 +23,7 @@ Group:		Base/Kernel
 Source0:	http://tara.shadowpimps.net/~bcm43xx/bcm43xx-snapshots/standalone/bcm43xx/%{name}-standalone-%{_snap}.tar.bz2
 # Source0-md5:	18c875d790507269aa58ba545c98c932
 Source1:	http://download.berlios.de/bcm43xx/%{name}-fwcutter-%{_fwcutter_ver}.tar.bz2
-# Source1-md5:	6a6ab01b56b1e191fa54d60a015fecd9
+# Source1-md5:	af9d7ce9794b00f0ee73d3a6bfb321ac
 Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
