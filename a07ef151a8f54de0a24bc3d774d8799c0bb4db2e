@@ -1,0 +1,2 @@
+- Updated fwcutter to 005. Release 2.
+- bcm43xx seems to be part of kernel now. Perhaps fwcutter should be separated to bcm43xx-fwcutter.spec ?
