@@ -113,9 +113,7 @@ EOF
 %endif
 
 %if %{with kernel}
-cd drivers/net/wireless/bcm43xx/
-%build_kernel_modules -m bcm43xx
-cd -
+%build_kernel_modules -C drivers/net/wireless/bcm43xx -m bcm43xx
 %endif
 
 %install
@@ -127,9 +125,7 @@ install %{name}-fwcutter-%{_fwcutter_ver}/bcm43xx-fwcutter $RPM_BUILD_ROOT%{_bin
 %endif
 
 %if %{with kernel}
-cd drivers/net/wireless/bcm43xx/
-%install_kernel_modules -m bcm43xx -d kernel/drivers/net
-cd -
+%install_kernel_modules -m drivers/net/wireless/bcm43xx/bcm43xx -d kernel/drivers/net
 %endif
 
 %clean
