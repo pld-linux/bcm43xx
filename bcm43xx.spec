@@ -28,7 +28,7 @@ Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
 %{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
-BuildRequires:	rpmbuild(macros) >= 1.329
+BuildRequires:	rpmbuild(macros) >= 1.330
 BuildRequires:	softmac-devel
 %endif
 Requires(post,postun):	/sbin/depmod
