@@ -14,7 +14,7 @@
 %define	_fwcutter_ver	005
 %define	_rel	3
 Summary:	Broadcom BCM43xx series driver for Linux
-Summary(pl):	Sterownik do kart Broadcom BCM43xx
+Summary(pl.UTF-8):   Sterownik do kart Broadcom BCM43xx
 Name:		bcm43xx
 Version:	0.0.1
 Release:	0.20%{_snap}.%{_rel}
@@ -38,13 +38,13 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 This package contains the Linux driver for the Broadcom BCM43xx
 Ethernet network adapter.
 
-%description -l pl
+%description -l pl.UTF-8
 Pakiet zawiera sterownik dla Linuksa do kart sieciowych Broadcom
 BCM43xx.
 
 %package -n kernel%{_alt_kernel}-net-bcm43xx
 Summary:	Broadcom BCM43xx driver for Linux
-Summary(pl):	Sterownik do karty Broadcom BCM43xx dla Linuksa
+Summary(pl.UTF-8):   Sterownik do karty Broadcom BCM43xx dla Linuksa
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -57,13 +57,13 @@ Requires(postun):	%releq_kernel_up
 This package contains the Linux driver for the Broadcom BCM43xx
 Ethernet network adapter.
 
-%description -n kernel%{_alt_kernel}-net-bcm43xx -l pl
+%description -n kernel%{_alt_kernel}-net-bcm43xx -l pl.UTF-8
 Pakiet zawiera sterownik dla Linuksa do kart sieciowych Broadcom
 BCM43xx.
 
 %package -n kernel%{_alt_kernel}-smp-net-bcm43xx
 Summary:	Broadcom BCM43xx driver for Linux SMP
-Summary(pl):	Sterownik do karty Broadcom BCM43xx dla Linuksa SMP
+Summary(pl.UTF-8):   Sterownik do karty Broadcom BCM43xx dla Linuksa SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -76,7 +76,7 @@ Requires(postun):	%releq_kernel_smp
 This package contains the Linux SMP driver for the Broadcom BCM43xx
 series Ethernet Network Adapter.
 
-%description -n kernel%{_alt_kernel}-smp-net-bcm43xx -l pl
+%description -n kernel%{_alt_kernel}-smp-net-bcm43xx -l pl.UTF-8
 Pakiet zawiera sterownik dla Linuksa SMP do kart sieciowych Broadcom
 BCM43xx.
 
