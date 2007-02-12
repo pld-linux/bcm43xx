@@ -14,7 +14,7 @@
 %define	_fwcutter_ver	005
 %define	_rel	3
 Summary:	Broadcom BCM43xx series driver for Linux
-Summary(pl.UTF-8):   Sterownik do kart Broadcom BCM43xx
+Summary(pl.UTF-8):	Sterownik do kart Broadcom BCM43xx
 Name:		bcm43xx
 Version:	0.0.1
 Release:	0.20%{_snap}.%{_rel}
@@ -44,7 +44,7 @@ BCM43xx.
 
 %package -n kernel%{_alt_kernel}-net-bcm43xx
 Summary:	Broadcom BCM43xx driver for Linux
-Summary(pl.UTF-8):   Sterownik do karty Broadcom BCM43xx dla Linuksa
+Summary(pl.UTF-8):	Sterownik do karty Broadcom BCM43xx dla Linuksa
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
@@ -63,7 +63,7 @@ BCM43xx.
 
 %package -n kernel%{_alt_kernel}-smp-net-bcm43xx
 Summary:	Broadcom BCM43xx driver for Linux SMP
-Summary(pl.UTF-8):   Sterownik do karty Broadcom BCM43xx dla Linuksa SMP
+Summary(pl.UTF-8):	Sterownik do karty Broadcom BCM43xx dla Linuksa SMP
 Release:	%{_rel}@%{_kernel_ver_str}
 Group:		Base/Kernel
 Requires(post,postun):	/sbin/depmod
