@@ -22,7 +22,7 @@ Source1:	http://download.berlios.de/bcm43xx/%{name}-fwcutter-%{_fwcutter_ver}.ta
 Patch0:		%{name}-local_headers.patch
 URL:		http://bcm43xx.berlios.de/
 %if %{with kernel}
-%{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.7}
+%{?with_dist_kernel:BuildRequires:	kernel%{_alt_kernel}-module-build >= 3:2.6.20.2}
 BuildRequires:	rpmbuild(macros) >= 1.379
 BuildRequires:	softmac-devel
 %endif
